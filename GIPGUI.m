@@ -22,7 +22,7 @@ function varargout = GIPGUI(varargin)
 
 % Edit the above text to modify the response to help GIPGUI
 
-% Last Modified by GUIDE v2.5 11-Mar-2016 12:06:25
+% Last Modified by GUIDE v2.5 11-Mar-2016 13:56:30
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -75,6 +75,7 @@ varargout{1} = handles.output;
 
 % --- Executes on button press in pushbutton1.
 function pushbutton1_Callback(hObject, eventdata, handles)
+[filename,pathname]=uigetfile({'*.txt;*.dxf';'*.*'},'Select DXF Input File');
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -269,3 +270,10 @@ function edit3_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes during object creation, after setting all properties.
+function pushbutton1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to pushbutton1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
