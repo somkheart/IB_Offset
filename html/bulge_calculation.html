@@ -1,0 +1,185 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>bulge_calculation</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-03-10"><meta name="DC.source" content="bulge_calculation.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% Extrack the end points</span>
+P1=[X_CAD(i) Y_CAD(i) ];
+P2=[X_CAD(i+1) Y_CAD(i+1)];
+
+<span class="comment">%Calculate nornal vector (with right-hand-rule  convention)</span>
+N=cross([P2-P1 0],[0 0 -1]); N=N(1:2); N=N/norm(N);
+
+<span class="comment">%Calculate chord length (P1 to P2)</span>
+chord = norm(P1-P2);
+
+<span class="comment">%Check if there is bulge</span>
+<span class="keyword">if</span>(BU_CAD(i) ==0)<span class="comment">% no bulge,meaning straight line</span>
+    <span class="comment">% Subdivide the line</span>
+    np=ceil(chord/ds)+1;
+    <span class="comment">% np=2;</span>
+    <span class="keyword">for</span> j=1:np-1 <span class="comment">% exclude the last vetext</span>
+        P=P1 + (j-1)/(np-1)*(P2-P1);
+        X_IFS(end+1)=P(1);
+        Y_IFS(end+1)=P(2);
+    <span class="keyword">end</span>
+<span class="keyword">else</span> <span class="comment">% there is a bulge</span>
+     <span class="comment">% Calculate the included angle</span>
+     th=4*atan(BU_CAD(i));
+
+     <span class="comment">% Distance from chord to circle center</span>
+     l= chord/2/tan(th/2);
+
+     <span class="comment">% Circle center and radius</span>
+     c=(P1+P2)/2+ 1*N;
+     R=norm(P1-c);
+
+     <span class="comment">% Starting and ending angles</span>
+     a1 = atan2(P1(2)-c(2),P1(1)-c(1));
+     a2 = atan2(P2(2)-c(2),P2(1)-c(1));
+
+     <span class="comment">% Adjust the values of a1 and a2 + Calculating arc length</span>
+     <span class="keyword">if</span>(th&lt;0) <span class="comment">% the bulge arc goes clockwise , which requires a1&gt;a2</span>
+         <span class="keyword">while</span>(a1&lt;a2)
+             a1=a1+2*pi;
+         <span class="keyword">end</span>
+         arc_length=(a1-a2)*R;
+     <span class="keyword">else</span> <span class="comment">% the bulge arc goes counter-clockwise,which requires a1&lt;a2</span>
+
+         <span class="keyword">while</span>(a1&gt;a2)
+             a1=a1-2*pi;
+         <span class="keyword">end</span>
+         arc_length=(a2-a1)*R;
+     <span class="keyword">end</span>
+     <span class="comment">% Subdivide the arc</span>
+     np=ceil(arc_length/ds)+1;
+     <span class="keyword">for</span> j=1:np-1 <span class="comment">% exclude the last vertex</span>
+         a=a1+(j-1)/(np-1)*(a2-a1);
+         X_IFS(end+1)=c(1)+R*cos(a);
+         Y_IFS(end+1)=c(2)+R*sin(a);
+     <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Undefined function or method 'X_CAD' for input arguments of type 'double'.
+
+Error in ==&gt; bulge_calculation at 2
+P1=[X_CAD(i) Y_CAD(i) ];
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.12<br></p></div><!--
+##### SOURCE BEGIN #####
+% Extrack the end points
+P1=[X_CAD(i) Y_CAD(i) ];
+P2=[X_CAD(i+1) Y_CAD(i+1)];
+
+%Calculate nornal vector (with right-hand-rule  convention)
+N=cross([P2-P1 0],[0 0 -1]); N=N(1:2); N=N/norm(N);
+
+%Calculate chord length (P1 to P2)
+chord = norm(P1-P2);
+
+%Check if there is bulge
+if(BU_CAD(i) ==0)% no bulge,meaning straight line
+    % Subdivide the line
+    np=ceil(chord/ds)+1;
+    % np=2;
+    for j=1:np-1 % exclude the last vetext
+        P=P1 + (j-1)/(np-1)*(P2-P1);
+        X_IFS(end+1)=P(1);
+        Y_IFS(end+1)=P(2);
+    end 
+else % there is a bulge
+     % Calculate the included angle
+     th=4*atan(BU_CAD(i));
+     
+     % Distance from chord to circle center
+     l= chord/2/tan(th/2);
+     
+     % Circle center and radius
+     c=(P1+P2)/2+ 1*N;
+     R=norm(P1-c);
+     
+     % Starting and ending angles
+     a1 = atan2(P1(2)-c(2),P1(1)-c(1));
+     a2 = atan2(P2(2)-c(2),P2(1)-c(1));
+     
+     % Adjust the values of a1 and a2 + Calculating arc length
+     if(th<0) % the bulge arc goes clockwise , which requires a1>a2
+         while(a1<a2)
+             a1=a1+2*pi;
+         end 
+         arc_length=(a1-a2)*R;
+     else % the bulge arc goes counter-clockwise,which requires a1<a2
+         
+         while(a1>a2)
+             a1=a1-2*pi;
+         end
+         arc_length=(a2-a1)*R;
+     end 
+     % Subdivide the arc
+     np=ceil(arc_length/ds)+1;
+     for j=1:np-1 % exclude the last vertex
+         a=a1+(j-1)/(np-1)*(a2-a1);
+         X_IFS(end+1)=c(1)+R*cos(a);
+         Y_IFS(end+1)=c(2)+R*sin(a);
+     end
+end
+##### SOURCE END #####
+--></body></html>
