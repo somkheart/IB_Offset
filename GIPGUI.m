@@ -22,7 +22,7 @@ function varargout = GIPGUI(varargin)
 
 % Edit the above text to modify the response to help GIPGUI
 
-% Last Modified by GUIDE v2.5 11-Mar-2016 13:56:30
+% Last Modified by GUIDE v2.5 11-Mar-2016 16:03:32
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -76,6 +76,11 @@ varargout{1} = handles.output;
 % --- Executes on button press in pushbutton1.
 function pushbutton1_Callback(hObject, eventdata, handles)
 [filename,pathname]=uigetfile({'*.txt;*.dxf';'*.*'},'Select DXF Input File');
+   alert(filename);
+if(isequal(filename,0))
+ 
+end
+
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -277,3 +282,13 @@ function pushbutton1_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes on key release with focus on figure1 or any of its controls.
+function figure1_WindowKeyReleaseFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  structure with the following fields (see FIGURE)
+%	Key: name of the key that was released, in lower case
+%	Character: character interpretation of the key(s) that was released
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) released
+% handles    structure with handles and user data (see GUIDATA)
